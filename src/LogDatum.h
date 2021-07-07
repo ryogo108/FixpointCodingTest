@@ -11,10 +11,14 @@ std::ostream& operator<<(std::ostream&, const Msgs&);
 class LogData {
 public:
   friend std::istream& operator>>(std::istream&, LogData&);
+
+  std::string getD() const { return d; };
+  std::string getA() const { return a; };
+  std::string getRespT() const { return RespT; };
 private:
   std::string d;
   std::string a;
-  int RespT;
+  std::string RespT;
 };
 
 class LogDatum {
@@ -29,6 +33,7 @@ public:
 
 private:
   std::vector<LogData> val;
+  std::vector<std::string> addresses() const;
 };
 
 #endif
