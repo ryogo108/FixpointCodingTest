@@ -2,7 +2,6 @@
 #include <fstream>
 #include "../src/LogDatum.h"
 
-
 using std::ifstream;
 using std::vector;
 using std::string;
