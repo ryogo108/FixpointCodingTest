@@ -13,6 +13,9 @@ class LogData {
 public:
   friend std::istream& operator>>(std::istream&, LogData&);
 
+  LogData() {}
+  LogData(std::string _d, std::string _a, std::string _t) : d(_d), a(_a), RespT(_t) {}
+
   std::string getD() const { return d; };
   std::string getA() const { return a; };
   std::string getRespT() const { return RespT; };
@@ -22,9 +25,14 @@ private:
   std::string RespT;
 };
 
+double averageRespTime(std::vector<LogData> ls);
+
 class LogDatum {
 public:
   friend std::istream& operator>>(std::istream&, LogDatum&);
+
+  LogDatum() {}
+  LogDatum(const std::vector<LogData>& v) : val(v) {}
   Msgs timeOuts();
   Msgs timeOuts(int);
   Msgs overLoads(int, int);

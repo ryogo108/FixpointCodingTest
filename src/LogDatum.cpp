@@ -12,6 +12,8 @@ using std::string;
 using std::map;
 using std::find_if;
 
+const double INF = 1e9;
+
 ostream& operator<<(ostream& os, const Msgs& msgs)
 {
   for(Msgs::const_iterator iter = msgs.begin();
@@ -92,9 +94,61 @@ Msgs LogDatum::timeOuts(int N)
   return ret;
 }
 
+double averageRespTime(vector<LogData> ls)
+{
+  if(ls.empty()) {
+    std::cerr << "ls is empty." << std::endl;
+    return 0;
+  }
+  if(find_if(ls.begin(), ls.end(), isTimeOut) != ls.end()) return INF;
+  double ret = 0;
+  for(auto it = ls.begin(); it != ls.end(); ++it) {
+    ret += double(stoi(it -> getRespT()));
+  }
+  return ret / double(ls.size());
+}
+
+// LogDatum の 中の LogData i が OverLoaded であるとは
+// 自身も含め過去の直近m個のLogDataの応答時間の平均がt以上である、
+// または timeOutが少なくとも一つあることとする。
 Msgs LogDatum::overLoads(int m, int t)
 {
-  Msgs ret = {"Hello", "overLoads"};
+  Msgs ret;
+  // IPアドレスが同じLogDataの集まりに分ける
+  const map<string, vector<LogData> > logByAddress = divideByAddress(val);
+  for(auto it = logByAddress.begin(); it != logByAddress.end(); ++it) {
+    vector<LogData> ls = it -> second;
+    vector<LogData>::const_iterator i = ls.begin() + (m - 1);
+    while(i != ls.end()) {
+      // 始めのOverLoadedしたLogDataを探す
+      for(auto e = i + 1; (e - 1) != ls.end(); ++e) {
+        double avg = averageRespTime(vector<LogData>(e - m, e));
+        if(avg >= t) {
+          i = e - 1;
+          break;
+        }
+        if(e == ls.end()) i = ls.end();
+      }
+      // OverLoadedの終わりを探す
+      vector<LogData>::const_iterator j = ls.end();
+      for(auto e = i + 1; (e - 1) != ls.end(); ++e) {
+        double avg = averageRespTime(vector<LogData>(e - m, e));
+        if(avg < t) {
+          j = e - 1;
+          break;
+        }
+      }
+      // [i, j)を ret に追加
+      if (i != ls.end()) {
+        const string a = it -> first;
+        if(j != ls.end())
+          ret.push_back("OverLoaded: " + a + ": [" + (i -> getD()) + ", " + (j -> getD()) + ")");
+        else
+          ret.push_back("OverLoaded: " + a + ": [" + (i -> getD()) + ", )");
+      }
+      i = j;
+    }
+  }
   return ret;
 }
 
