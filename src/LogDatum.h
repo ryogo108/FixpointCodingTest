@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <set>
 
 using Msgs = std::vector<std::string>;
 std::ostream& operator<<(std::ostream&, const Msgs&);
@@ -33,7 +34,7 @@ public:
 
 private:
   std::vector<LogData> val;
-  std::vector<std::string> addresses() const;
+  std::set<std::string> addresses() const;
 };
 
 #endif
