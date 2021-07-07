@@ -120,9 +120,9 @@ Msgs LogDatum::timeOuts(int N)
         }
         const string a = it -> first;
         if(j != ls.end())
-          ret.push_back(a + ": [" + (i -> getD()) + ", " + (j -> getD()) + ")");
+          ret.push_back("timeOut: " + a + ": [" + (i -> getD()) + ", " + (j -> getD()) + ")");
         else
-          ret.push_back(a + ": [" + (i -> getD()) + ", )");
+          ret.push_back("timeOut: " + a + ": [" + (i -> getD()) + ", )");
       }
       i = j;
     }
@@ -178,9 +178,9 @@ Msgs LogDatum::overLoads(int m, int t)
       if (i != ls.end()) {
         const string a = it -> first;
         if(j != ls.end())
-          ret.push_back("OverLoaded: " + a + ": [" + (i -> getD()) + ", " + (j -> getD()) + ")");
+          ret.push_back("overLoaded: " + a + ": [" + (i -> getD()) + ", " + (j -> getD()) + ")");
         else
-          ret.push_back("OverLoaded: " + a + ": [" + (i -> getD()) + ", )");
+          ret.push_back("overLoaded: " + a + ": [" + (i -> getD()) + ", )");
       }
       i = j;
     }

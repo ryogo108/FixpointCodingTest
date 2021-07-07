@@ -50,7 +50,7 @@ TEST(LogDatumTest, TimeOuts1Test1)
   LogDatum l;
   ifstream is("test/TestCase1");
   is >> l;
-  Msgs expect = {"10.20.30.1/16: [20201019133125, 20201019133225)"};
+  Msgs expect = {"timeOut: 10.20.30.1/16: [20201019133125, 20201019133225)"};
   EXPECT_EQ(expect, l.timeOuts());
 }
 
@@ -59,9 +59,9 @@ TEST(LogDatumTest, TimeOuts1Test2)
   LogDatum l;
   ifstream is("test/TestCase2");
   is >> l;
-  Msgs expect = {"10.20.30.1/16: [20201019133124, 20201019133224)",
-                 "10.20.30.1/16: [20201019133225, )",
-                 "192.168.1.1/24: [20201019133134, 20201019133235)"};
+  Msgs expect = {"timeOut: 10.20.30.1/16: [20201019133124, 20201019133224)",
+                 "timeOut: 10.20.30.1/16: [20201019133225, )",
+                 "timeOut: 192.168.1.1/24: [20201019133134, 20201019133235)"};
   EXPECT_EQ(expect, l.timeOuts());
 }
 
@@ -70,8 +70,8 @@ TEST(LogDatumTest, TimeOuts2Test1)
   LogDatum l;
   ifstream is("test/TestCase1");
   is >> l;
-  Msgs expect1 = {"10.20.30.1/16: [20201019133125, 20201019133225)"};
-  Msgs expect2 = {"10.20.30.1/16: [20201019133125, 20201019133225)"};
+  Msgs expect1 = {"timeOut: 10.20.30.1/16: [20201019133125, 20201019133225)"};
+  Msgs expect2 = {"timeOut: 10.20.30.1/16: [20201019133125, 20201019133225)"};
   Msgs expect3 = {};
   EXPECT_EQ(expect1, l.timeOuts(1));
   EXPECT_EQ(expect2, l.timeOuts(2));
@@ -83,14 +83,14 @@ TEST(LogDatumTest, TimeOuts2Test2)
   LogDatum l;
   ifstream is("test/TestCase2");
   is >> l;
-  Msgs expect1 = {"10.20.30.1/16: [20201019133124, 20201019133224)",
-                 "10.20.30.1/16: [20201019133225, )",
-                 "192.168.1.1/24: [20201019133134, 20201019133235)"};
-  Msgs expect2 = {"10.20.30.1/16: [20201019133124, 20201019133224)",
-                 "10.20.30.1/16: [20201019133225, )",
-                 "192.168.1.1/24: [20201019133134, 20201019133235)"};
-  Msgs expect3 = {"10.20.30.1/16: [20201019133225, )",
-                  "192.168.1.1/24: [20201019133134, 20201019133235)"};
+  Msgs expect1 = {"timeOut: 10.20.30.1/16: [20201019133124, 20201019133224)",
+                 "timeOut: 10.20.30.1/16: [20201019133225, )",
+                 "timeOut: 192.168.1.1/24: [20201019133134, 20201019133235)"};
+  Msgs expect2 = {"timeOut: 10.20.30.1/16: [20201019133124, 20201019133224)",
+                 "timeOut: 10.20.30.1/16: [20201019133225, )",
+                 "timeOut: 192.168.1.1/24: [20201019133134, 20201019133235)"};
+  Msgs expect3 = {"timeOut: 10.20.30.1/16: [20201019133225, )",
+                  "timeOut: 192.168.1.1/24: [20201019133134, 20201019133235)"};
   Msgs expect4 = {};
   EXPECT_EQ(expect1, l.timeOuts(1));
   EXPECT_EQ(expect2, l.timeOuts(2));
@@ -103,9 +103,9 @@ TEST(LogDatumTest, OverLoadsTest1)
   LogDatum l;
   ifstream is("test/TestCase1");
   is >> l;
-  Msgs expect1 = {"OverLoaded: 10.20.30.1/16: [20201019133125, 20201019133225)"};
-  Msgs expect2 = {"OverLoaded: 10.20.30.1/16: [20201019133125, )"};
-  Msgs expect3 = {"OverLoaded: 10.20.30.1/16: [20201019133224, )"};
+  Msgs expect1 = {"overLoaded: 10.20.30.1/16: [20201019133125, 20201019133225)"};
+  Msgs expect2 = {"overLoaded: 10.20.30.1/16: [20201019133125, )"};
+  Msgs expect3 = {"overLoaded: 10.20.30.1/16: [20201019133224, )"};
   EXPECT_EQ(expect1, l.overLoads(1, 500));
   EXPECT_EQ(expect2, l.overLoads(2, 500));
   EXPECT_EQ(expect3, l.overLoads(3, 500));
@@ -116,15 +116,15 @@ TEST(LogDatumTest, OverLoadsTest2)
   LogDatum l;
   ifstream is("test/TestCase3");
   is >> l;
-  Msgs expect2_500 = {"OverLoaded: 10.20.30.1/16: [20201019133125, 20201019133224)"};
-  Msgs expect2_400 = {"OverLoaded: 10.20.30.1/16: [20201019133125, 20201019133224)",
-                      "OverLoaded: 192.168.1.1/24: [20201019133135, )"};
-  Msgs expect2_300 = {"OverLoaded: 10.20.30.1/16: [20201019133125, 20201019133224)",
-                      "OverLoaded: 10.20.30.1/16: [20201019133325, )",
-                      "OverLoaded: 192.168.1.1/24: [20201019133135, )"};
+  Msgs expect2_500 = {"overLoaded: 10.20.30.1/16: [20201019133125, 20201019133224)"};
+  Msgs expect2_400 = {"overLoaded: 10.20.30.1/16: [20201019133125, 20201019133224)",
+                      "overLoaded: 192.168.1.1/24: [20201019133135, )"};
+  Msgs expect2_300 = {"overLoaded: 10.20.30.1/16: [20201019133125, 20201019133224)",
+                      "overLoaded: 10.20.30.1/16: [20201019133325, )",
+                      "overLoaded: 192.168.1.1/24: [20201019133135, )"};
   Msgs expect4_500 = {};
-  Msgs expect4_400 = {"OverLoaded: 192.168.1.1/24: [20201019133235, )"};
-  Msgs expect4_300 = {"OverLoaded: 192.168.1.1/24: [20201019133235, )"};
+  Msgs expect4_400 = {"overLoaded: 192.168.1.1/24: [20201019133235, )"};
+  Msgs expect4_300 = {"overLoaded: 192.168.1.1/24: [20201019133235, )"};
   EXPECT_EQ(expect2_500, l.overLoads(2, 500));
   EXPECT_EQ(expect2_400, l.overLoads(2, 400));
   EXPECT_EQ(expect2_300, l.overLoads(2, 300));
