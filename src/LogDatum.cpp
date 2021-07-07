@@ -62,6 +62,42 @@ map<string, vector<LogData> > divideByAddress(vector<LogData> ls)
   return ret;
 }
 
+string subnet(string s)
+{
+  vector<string> ss = split(s, '/');
+  int subnetMask = stoi(ss[1]);
+  vector<string> IPAddress = split(s, '.');
+  string ret;
+  for(int i = 0; i < 4; ++i) {
+    if(i > 0) ret += ".";
+    if(subnetMask - 8 * i >= 8) {
+      ret += IPAddress[i];
+      continue;
+    }
+    else if(subnetMask - 8 * i > 0) {
+      int b = subnetMask - 8 * i;
+      unsigned char a = stoi(IPAddress[i]);
+      unsigned char r = 0;
+      for(int j = 1; j <= b; ++j) {
+        r += (a & 1<<(8 - j));
+      }
+      ret += std::to_string(r);
+      continue;
+    }
+    ret += "0";
+  }
+  return ret;
+}
+
+map<string, vector<LogData> > divideBySubnets(vector<LogData> ls)
+{
+  map<string, vector<LogData> > ret;
+  for(auto it = ls.begin(); it != ls.end(); ++it) {
+    ret[subnet(it -> getA())].push_back(*it);
+  }
+  return ret;
+}
+
 Msgs LogDatum::timeOuts(int N)
 {
   typedef vector<LogData>::const_iterator iter;

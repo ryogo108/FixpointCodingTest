@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <set>
+#include <map>
 
 using Msgs = std::vector<std::string>;
 std::ostream& operator<<(std::ostream&, const Msgs&);
@@ -26,6 +27,10 @@ private:
 };
 
 double averageRespTime(std::vector<LogData> ls);
+std::map<std::string, std::vector<LogData> > divideByAddress(std::vector<LogData>);
+
+std::string subnet(std::string);
+std::map<std::string, std::vector<LogData> > divideBySubnets(std::vector<LogData>);
 
 class LogDatum {
 public:

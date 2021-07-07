@@ -5,6 +5,7 @@
 
 using std::ifstream;
 using std::vector;
+using std::string;
 
 bool operator==(const Msgs& m1, const Msgs& m2)
 {
@@ -33,6 +34,16 @@ TEST(LogDatumTest, averageRespTimeTest)
   EXPECT_EQ(expect1, averageRespTime(l1));
   EXPECT_EQ(expect2, averageRespTime(l2));
   EXPECT_EQ(expect3, averageRespTime(l3));
+}
+
+TEST(LogDatumTest, subnetTest)
+{
+  string s1 = "10.20.30.1/16";
+  string s2 = "192.168.1.1/24";
+  string expect1 = "10.20.0.0";
+  string expect2 = "192.168.1.0";
+  EXPECT_EQ(expect1, subnet(s1));
+  EXPECT_EQ(expect2, subnet(s2));
 }
 
 TEST(LogDatumTest, TimeOuts1Test1)
@@ -128,8 +139,8 @@ TEST(LogDatumTest, TimeOutsBySubnetsTest1)
   LogDatum l;
   ifstream is("test/TestCase1");
   is >> l;
-  Msgs expect1 = {"timeOuts in the subnet 10.20: [20201019133125, 20201019133225)"};
-  Msgs expect2 = {"timeOuts in the subnet 10.20: [20201019133125, 20201019133225)"};
+  Msgs expect1 = {"timeOuts in the subnet 10.20.0.0: [20201019133125, 20201019133225)"};
+  Msgs expect2 = {"timeOuts in the subnet 10.20.0.0: [20201019133125, 20201019133225)"};
   Msgs expect3 = {};
   Msgs expect4 = {};
   EXPECT_EQ(expect1, l.timeOutsBySubnets(1));
