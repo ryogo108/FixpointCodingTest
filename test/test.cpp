@@ -16,8 +16,8 @@ bool operator==(const Msgs& m1, const Msgs& m2)
 TEST(LogDatumTest, TimeOuts1Test)
 {
   LogDatum l;
-  ifstream ifs("TestCase1");
-  ifs >> l;
-  Msgs expect = {"Hello", "TimeOuts"};
+  ifstream is("test/TestCase1");
+  is >> l;
+  Msgs expect = {"10.20.30.1/16: 20201019133324 ->"};
   EXPECT_EQ(expect, l.timeOuts());
 }
