@@ -148,3 +148,24 @@ TEST(LogDatumTest, TimeOutsBySubnetsTest1)
   EXPECT_EQ(expect3, l.timeOutsBySubnets(3));
   EXPECT_EQ(expect4, l.timeOutsBySubnets(4));
 }
+
+TEST(LogDatumTest, TimeOutsBySubnetsTest2)
+{
+  LogDatum l;
+  ifstream is("test/TestCase4");
+  is >> l;
+  Msgs expect1 = {"timeOut in the subnet 10.20.0.0: [20201019133124, 20201019133225)",
+                  "timeOut in the subnet 10.20.0.0: [20201019133324, 20201019133325)",
+                  "timeOut in the subnet 192.168.1.0: [20201019133134, 20201019133234)",
+                  "timeOut in the subnet 192.168.1.0: [20201019133235, )",
+                  };
+  Msgs expect2 = {"timeOut in the subnet 10.20.0.0: [20201019133124, 20201019133225)",
+                  "timeOut in the subnet 192.168.1.0: [20201019133134, 20201019133234)",
+                  };
+  Msgs expect3 = {"timeOut in the subnet 10.20.0.0: [20201019133124, 20201019133225)",};
+  Msgs expect4 = {};
+  EXPECT_EQ(expect1, l.timeOutsBySubnets(1));
+  EXPECT_EQ(expect2, l.timeOutsBySubnets(2));
+  EXPECT_EQ(expect3, l.timeOutsBySubnets(3));
+  EXPECT_EQ(expect4, l.timeOutsBySubnets(4));
+}
