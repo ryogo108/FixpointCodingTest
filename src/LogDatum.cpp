@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include <set>
+#include <map>
 #include "LogDatum.h"
 #include "split.h"
 
@@ -9,8 +9,8 @@ using std::istream;
 using std::endl;
 using std::vector;
 using std::string;
+using std::map;
 using std::find_if;
-using std::set;
 
 ostream& operator<<(ostream& os, const Msgs& msgs)
 {
@@ -43,36 +43,45 @@ istream& operator>>(istream& is, LogDatum& ls)
   return is;
 }
 
-set<string> LogDatum::addresses() const
+Msgs LogDatum::timeOuts()
 {
-  set<string> ret;
-  for(vector<LogData>::const_iterator it = val.begin();
-      it != val.end(); ++it) {
-    ret.insert(it -> getA());
+  return timeOuts(1);
+}
+
+bool isTimeOut(LogData l) { return l.getRespT() == "-";}
+bool notTimeOut(LogData l) { return l.getRespT() != "-";}
+
+map<string, vector<LogData> > divideByAddress(vector<LogData> ls)
+{
+  map<string, vector<LogData> > ret;
+  for(auto it = ls.begin(); it != ls.end(); ++it) {
+    ret[it -> getA()].push_back(*it);
   }
   return ret;
 }
 
-Msgs LogDatum::timeOuts()
+Msgs LogDatum::timeOuts(int N)
 {
   typedef vector<LogData>::const_iterator iter;
   Msgs ret;
-  const set<string> as = addresses();
-  const vector<LogData>& v = val;
-  for(set<string>::const_iterator it = as.begin(); it != as.end(); ++it) {
-    string a = (*it);
-    iter i = v.begin();
-    // IPアドレスがaのLogDataのTimeOutの期間を探す
-    while (i != v.end()) {
+  // IPアドレスが同じLogDataの集まりに分ける
+  const map<string, vector<LogData> > logByAddress = divideByAddress(val);
+  for(auto it = logByAddress.begin(); it != logByAddress.end(); ++it) {
+    vector<LogData> ls = it -> second;
+    auto i = ls.begin();
+    while(i != ls.end()) {
       // 始めのtimeOutしたLogDataを探す
-      i = find_if(i, v.end(), [=](LogData l) {return l.getA() == a &&
-                                                     l.getRespT() == "-";});
+      i = find_if(i, ls.end(), isTimeOut);
       // timeOutの終わりを探す
-      iter j = find_if(i, v.end(), [=](LogData l) {return l.getA() == a &&
-                                                          l.getRespT() != "-";});
-      // [i, j)の範囲の文字をコピー
-      if (i != v.end()) {
-        if(j != v.end())
+      auto j = find_if(i, ls.end(), notTimeOut);
+      // [i, j)の範囲でN個以上timeOutがあれば ret に追加
+      if (i != ls.end()) {
+        int n = count_if(i, j, isTimeOut);
+        if(n < N) {
+          i = j; continue;
+        }
+        const string a = it -> first;
+        if(j != ls.end())
           ret.push_back(a + ": [" + (i -> getD()) + ", " + (j -> getD()) + ")");
         else
           ret.push_back(a + ": [" + (i -> getD()) + ", )");
@@ -80,12 +89,6 @@ Msgs LogDatum::timeOuts()
       i = j;
     }
   }
-  return ret;
-}
-
-Msgs LogDatum::timeOuts(int N = 1)
-{
-  Msgs ret = {"Hello", "timeOuts"};
   return ret;
 }
 
