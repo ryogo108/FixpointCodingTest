@@ -139,8 +139,8 @@ TEST(LogDatumTest, TimeOutsBySubnetsTest1)
   LogDatum l;
   ifstream is("test/TestCase1");
   is >> l;
-  Msgs expect1 = {"timeOuts in the subnet 10.20.0.0: [20201019133125, 20201019133225)"};
-  Msgs expect2 = {"timeOuts in the subnet 10.20.0.0: [20201019133125, 20201019133225)"};
+  Msgs expect1 = {"timeOut in the subnet 10.20.0.0: [20201019133125, 20201019133225)"};
+  Msgs expect2 = {"timeOut in the subnet 10.20.0.0: [20201019133125, 20201019133225)"};
   Msgs expect3 = {};
   Msgs expect4 = {};
   EXPECT_EQ(expect1, l.timeOutsBySubnets(1));
