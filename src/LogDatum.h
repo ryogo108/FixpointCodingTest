@@ -47,7 +47,6 @@ public:
 
 private:
   std::vector<LogData> val;
-  std::set<std::string> addresses() const;
 };
 
 #endif
