@@ -72,11 +72,10 @@ Msgs LogDatum::timeOuts()
                                                           l.getRespT() != "-";});
       // [i, j)の範囲の文字をコピー
       if (i != v.end()) {
-        std::cout << "Found!!" << std::endl;
         if(j != v.end())
-          ret.push_back(a + ": " + (i -> getD()) + " -> " + (j -> getD()));
+          ret.push_back(a + ": [" + (i -> getD()) + ", " + (j -> getD()) + ")");
         else
-          ret.push_back(a + ": " + (i -> getD()) + " ->");
+          ret.push_back(a + ": [" + (i -> getD()) + ", )");
       }
       i = j;
     }
