@@ -190,7 +190,33 @@ Msgs LogDatum::overLoads(int m, int t)
 
 Msgs LogDatum::timeOutsBySubnets(int N)
 {
-  Msgs ret = {"Hello", "timeOutsBySubnet"};
+  typedef vector<LogData>::const_iterator iter;
+  Msgs ret;
+  // サブネットが同じLogDataの集まりに分ける
+  const map<string, vector<LogData> > logBySubnets = divideBySubnets(val);
+  for(auto it = logBySubnets.begin(); it != logBySubnets.end(); ++it) {
+    vector<LogData> ls = it -> second;
+    auto i = ls.begin();
+    while(i != ls.end()) {
+      // 始めのtimeOutしたLogDataを探す
+      i = find_if(i, ls.end(), isTimeOut);
+      // timeOutの終わりを探す
+      auto j = find_if(i, ls.end(), notTimeOut);
+      // [i, j)の範囲でN個以上timeOutがあれば ret に追加
+      if (i != ls.end()) {
+        int n = count_if(i, j, isTimeOut);
+        if(n < N) {
+          i = j; continue;
+        }
+        const string sub = it -> first;
+        if(j != ls.end())
+          ret.push_back("timeOut in the subnet " + sub + ": [" + (i -> getD()) + ", " + (j -> getD()) + ")");
+        else
+          ret.push_back("timeOut in the subnet " + sub + ": [" + (i -> getD()) + ", )");
+      }
+      i = j;
+    }
+  }
   return ret;
 }
 
