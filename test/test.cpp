@@ -13,11 +13,23 @@ bool operator==(const Msgs& m1, const Msgs& m2)
   return true;
 }
 
-TEST(LogDatumTest, TimeOuts1Test)
+TEST(LogDatumTest, TimeOuts1Test1)
 {
   LogDatum l;
   ifstream is("test/TestCase1");
   is >> l;
-  Msgs expect = {"10.20.30.1/16: 20201019133324 ->"};
+  Msgs expect = {"10.20.30.1/16: [20201019133125, 20201019133225)"};
+  EXPECT_EQ(expect, l.timeOuts());
+}
+
+TEST(LogDatumTest, TimeOuts1Test2)
+{
+  LogDatum l;
+  ifstream is("test/TestCase2");
+  is >> l;
+  Msgs expect = {"10.20.30.1/16: [20201019133124, 20201019133224)",
+                 "10.20.30.1/16: [20201019133225, )",
+                 "192.168.1.1/24: [20201019133134, 20201019133235)"};
+
   EXPECT_EQ(expect, l.timeOuts());
 }
