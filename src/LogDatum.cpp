@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+#include <set>
 #include "LogDatum.h"
 #include "split.h"
 
@@ -7,6 +9,8 @@ using std::istream;
 using std::endl;
 using std::vector;
 using std::string;
+using std::find_if;
+using std::set;
 
 ostream& operator<<(ostream& os, const Msgs& msgs)
 {
@@ -26,7 +30,7 @@ istream& operator>>(istream& is, LogData& l)
   if(strs.size() != 3) return is;
   l.d = strs[0];
   l.a = strs[1];
-  l.RespT = (strs[2] == "-") ? -1 : stoi(strs[2]);
+  l.RespT = strs[2];
 
   return is;
 }
@@ -39,9 +43,44 @@ istream& operator>>(istream& is, LogDatum& ls)
   return is;
 }
 
+set<string> LogDatum::addresses() const
+{
+  set<string> ret;
+  for(vector<LogData>::const_iterator it = val.begin();
+      it != val.end(); ++it) {
+    ret.insert(it -> getA());
+  }
+  return ret;
+}
+
 Msgs LogDatum::timeOuts()
 {
-  Msgs ret = {"Hello", "timeOuts"};
+  typedef vector<LogData>::const_iterator iter;
+  Msgs ret;
+  const set<string> as = addresses();
+  const vector<LogData>& v = val;
+  for(set<string>::const_iterator it = as.begin(); it != as.end(); ++it) {
+    string a = (*it);
+    iter i = v.begin();
+    // IPアドレスがaのLogDataのTimeOutの期間を探す
+    while (i != v.end()) {
+      // 始めのtimeOutしたLogDataを探す
+      i = find_if(i, v.end(), [=](LogData l) {return l.getA() == a &&
+                                                     l.getRespT() == "-";});
+      // timeOutの終わりを探す
+      iter j = find_if(i, v.end(), [=](LogData l) {return l.getA() == a &&
+                                                          l.getRespT() != "-";});
+      // [i, j)の範囲の文字をコピー
+      if (i != v.end()) {
+        std::cout << "Found!!" << std::endl;
+        if(j != v.end())
+          ret.push_back(a + ": " + (i -> getD()) + " -> " + (j -> getD()));
+        else
+          ret.push_back(a + ": " + (i -> getD()) + " ->");
+      }
+      i = j;
+    }
+  }
   return ret;
 }
 
