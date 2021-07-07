@@ -26,10 +26,10 @@ inputFileのフォーマット: 確認日時, IPv4アドレス, 応答時間
 20201019133325,10.20.30.2/16,2 <br>
 
 ## 出力ファイルのフォーマット
-タイムアウトの場合, timeOut: IPv4アドレス: [begin, end)
-timeOutが現在まで続いている場合, [begin, ) と表示する。
-過負荷の場合, overLoaded: IPv4アドレス: [begin, end)
-overLoadedが現在まで続いている場合, [begin, ) と表示する。
+タイムアウトの場合, timeOut: IPv4アドレス: [begin, end) <br>
+timeOutが現在まで続いている場合, [begin, ) と表示する。 <br>
+過負荷の場合, overLoaded: IPv4アドレス: [begin, end) <br>
+overLoadedが現在まで続いている場合, [begin, ) と表示する。 <br>
 ## テスト
 google test に依存しています: https://github.com/google/googletest
 ```
